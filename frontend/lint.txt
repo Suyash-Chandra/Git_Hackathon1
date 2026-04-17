@@ -1,0 +1,43 @@
+
+C:\Users\chand\Documents\Git Music\frontend\src\app\evolution\page.tsx
+  39:6  warning  React Hook useEffect has a missing dependency: 'selectedIdeaId'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\chand\Documents\Git Music\frontend\src\components\AudioCapture.tsx
+  106:6  warning  React Hook useCallback has a missing dependency: 'handleCaptureData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\chand\Documents\Git Music\frontend\src\components\EvolutionGraph.tsx
+   3:10  warning  'useCallback' is defined but never used    @typescript-eslint/no-unused-vars
+   3:34  warning  'useState' is defined but never used       @typescript-eslint/no-unused-vars
+  15:10  warning  'getAudioUrl' is defined but never used    @typescript-eslint/no-unused-vars
+  24:9   warning  'tags' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  72:84  warning  'title' is defined but never used          @typescript-eslint/no-unused-vars
+  78:49  warning  'index' is defined but never used          @typescript-eslint/no-unused-vars
+
+C:\Users\chand\Documents\Git Music\frontend\src\components\IdeaCard.tsx
+  97:26  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\chand\Documents\Git Music\frontend\src\components\IdeaCard.tsx:97:26
+   95 |             className="flex-1 rounded-full bg-violet-500/40"
+   96 |             style={{
+>  97 |               height: `${Math.random() * 80 + 20}%`,
+      |                          ^^^^^^^^^^^^^ Cannot call impure function
+   98 |               opacity: 0.3 + Math.random() * 0.5,
+   99 |             }}
+  100 |           />  react-hooks/purity
+  98:30  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\chand\Documents\Git Music\frontend\src\components\IdeaCard.tsx:98:30
+   96 |             style={{
+   97 |               height: `${Math.random() * 80 + 20}%`,
+>  98 |               opacity: 0.3 + Math.random() * 0.5,
+      |                              ^^^^^^^^^^^^^ Cannot call impure function
+   99 |             }}
+  100 |           />
+  101 |         ))}                                               react-hooks/purity
+
+✖ 10 problems (2 errors, 8 warnings)
+
