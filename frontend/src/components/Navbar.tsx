@@ -24,7 +24,7 @@ export default function Navbar() {
           </div>
           <div>
             <p className="font-[family-name:var(--font-display)] text-2xl leading-none tracking-[-0.04em]">
-              Dhwanix
+              DhwaniX
             </p>
             <p className="mt-1 text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[var(--soft)]">
               idea archive
