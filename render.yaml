@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: git-music-api
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: CORS_ORIGINS
+        value: https://git-music.vercel.app,http://localhost:3000
+      - key: OLLAMA_URL
+        value: ""
+      - key: PYTHON_VERSION
+        value: "3.12"
