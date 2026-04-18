@@ -105,8 +105,11 @@ def analyze_audio(file_path: str) -> dict:
     Returns dict with bpm, key, spectral features, duration, energy.
     """
     try:
-        y, sr = librosa.load(file_path, sr=22050, mono=True)
-        duration = librosa.get_duration(y=y, sr=sr)
+        # 1. Get true duration WITHOUT loading the file into memory
+        duration = librosa.get_duration(path=file_path)
+
+        # 2. Limit the analysis to MAX 10 seconds to keep memory use under ~200MB!
+        y, sr = librosa.load(file_path, sr=22050, mono=True, duration=10.0)
 
         # Skip analysis for extremely short clips (< 0.5s)
         if duration < 0.5:
