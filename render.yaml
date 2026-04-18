@@ -6,7 +6,6 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     region: oregon
-    healthCheckPath: /health
     envVars:
       - key: CORS_ORIGINS
         value: https://git-music.vercel.app,http://localhost:3000
