@@ -1,5 +1,5 @@
-// Vercel proxy rewrite handles the routing now to avoid CORS/Mixed Content.
-const API_BASE = "";
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const API_BASE = rawApiBase.replace(/\/+$/, "");
 
 async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
