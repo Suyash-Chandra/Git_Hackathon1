@@ -10,14 +10,13 @@ MINOR_PROFILE = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 
 KEY_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 
 
-def detect_key(y: np.ndarray, sr: int) -> str:
+def detect_key(y_harmonic: np.ndarray, sr: int) -> str:
     """
-    Memory-lite key detection to prevent OOM on small servers.
-    Uses basic STFT chroma instead of HPSS + CQT.
+    High-accuracy key detection using Constant-Q Transform on harmonic signal.
     """
     try:
-        # Use simple STFT chroma (much less memory than CQT + HPSS)
-        chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+        # Use CQT chroma for logarithmic pitch accuracy matching musical notes
+        chroma = librosa.feature.chroma_cqt(y=y_harmonic, sr=sr)
         
         # Aggregate: simple mean across time
         chroma_mean = np.mean(chroma, axis=1)
@@ -55,14 +54,13 @@ def detect_key(y: np.ndarray, sr: int) -> str:
         return "Unknown"
 
 
-def detect_bpm(y: np.ndarray, sr: int) -> float | None:
+def detect_bpm(y_percussive: np.ndarray, sr: int) -> float | None:
     """
-    Memory-lite BPM detection using librosa's default beat tracker.
-    Avoids HPSS to save memory.
+    High-accuracy BPM detection using onset strength of the percussive signal.
     """
     try:
-        # Build onset strength envelope directly from the original signal
-        onset_env = librosa.onset.onset_strength(y=y, sr=sr)
+        # Build onset strength envelope from percussive signal
+        onset_env = librosa.onset.onset_strength(y=y_percussive, sr=sr)
 
         # Dynamic-programming beat tracker
         tempo_estimate, beat_frames = librosa.beat.beat_track(
@@ -123,11 +121,15 @@ def analyze_audio(file_path: str) -> dict:
                 "energy_level": "unknown",
             }
 
-        # BPM (uses percussive separation + beat tracking + IBI calculation)
-        bpm = detect_bpm(y, sr)
+        # Perform Harmonic-Percussive Source Separation (HPSS)
+        # Safe to do memory-wise since y is heavily truncated to 10s.
+        y_harmonic, y_percussive = librosa.effects.hpss(y)
 
-        # Key detection (uses harmonic separation + CQT chroma + nn_filter)
-        key_signature = detect_key(y, sr)
+        # BPM (uses percussive separation + beat tracking + IBI calculation)
+        bpm = detect_bpm(y_percussive, sr)
+
+        # Key detection (uses harmonic separation + CQT chroma)
+        key_signature = detect_key(y_harmonic, sr)
 
         # Spectral centroid (brightness)
         spectral_centroid = float(np.mean(librosa.feature.spectral_centroid(y=y, sr=sr)))
